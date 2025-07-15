@@ -1,0 +1,62 @@
+#include <iostream>
+using namespace std;
+
+char board[3][3] = { {' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '} };
+char currentPlayer = 'X';
+
+void printBoard() {
+    for (int i = 0; i < 3; i++) {
+        cout << board[i][0] << "|" << board[i][1] << "|" << board[i][2] << endl;
+        if (i < 2) cout << "-----" << endl;
+    }
+}
+
+bool checkWinner() {
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] == currentPlayer &&
+            board[i][1] == currentPlayer &&
+            board[i][2] == currentPlayer) return true;
+        if (board[0][i] == currentPlayer &&
+            board[1][i] == currentPlayer &&
+            board[2][i] == currentPlayer) return true;
+    }
+    return (board[0][0] == currentPlayer && board[1][1] == currentPlayer && board[2][2] == currentPlayer) ||
+           (board[0][2] == currentPlayer && board[1][1] == currentPlayer && board[2][0] == currentPlayer);
+}
+
+bool isBoardFull() {
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (board[i][j] == ' ') return false;
+    return true;
+}
+
+int main() {
+    int row, col;
+    while (true) {
+        printBoard();
+        cout << "Player " << currentPlayer << ", enter row and column (0-2): ";
+        cin >> row >> col;
+
+        if (board[row][col] != ' ') {
+            cout << "Cell already taken. Try again.\n";
+            continue;
+        }
+
+        board[row][col] = currentPlayer;
+
+        if (checkWinner()) {
+            printBoard();
+            cout << "Player " << currentPlayer << " wins!\n";
+            break;
+        } else if (isBoardFull()) {
+            printBoard();
+            cout << "It's a draw!\n";
+            break;
+        }
+
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+    }
+
+    return 0;
+}

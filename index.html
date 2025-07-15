@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+  <style>
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      margin: 20px auto;
+      width: max-content;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      font-size: 2em;
+      text-align: center;
+      line-height: 100px;
+      border: 2px solid #333;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center;">Tic Tac Toe</h2>
+  <div id="board"></div>
+  <p style="text-align:center;" id="status"></p>
+
+  <script>
+    const board = document.getElementById('board');
+    const statusText = document.getElementById('status');
+    let currentPlayer = 'X';
+    let cells = Array(9).fill(null);
+
+    function checkWinner() {
+      const wins = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      for (const [a,b,c] of wins) {
+        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+          return cells[a];
+        }
+      }
+      return cells.includes(null) ? null : 'Draw';
+    }
+
+    function handleClick(i) {
+      if (cells[i] || checkWinner()) return;
+      cells[i] = currentPlayer;
+      render();
+      const winner = checkWinner();
+      if (winner) {
+        statusText.textContent = winner === 'Draw' ? "It's a draw!" : `${winner} wins!`;
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+    }
+
+    function render() {
+      board.innerHTML = '';
+      cells.forEach((cell, i) => {
+        const div = document.createElement('div');
+        div.className = 'cell';
+        div.textContent = cell;
+        div.onclick = () => handleClick(i);
+        board.appendChild(div);
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>
